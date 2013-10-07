@@ -11,8 +11,19 @@
 ## Title
 #if($doc.getFieldValue('title'))
   #set($title = $esc.html($doc.getFirstValue('title')))
+#elseif($doc.getFieldValue('subject'))
+  #set($title = $esc.html($doc.getFirstValue('subject')))
 #else
   #set($title = "["+$doc.getFieldValue('id')+"]")
+#end
+
+## Check The ID
+#if($doc.getFieldValue('docId'))
+  #set($myId = $docId)
+#elseif($doc.getFieldValue('id'))
+  #set($myId = $doc.getFieldValue('id'))
+#else
+  #set($myId = $doc.getFieldValue('messageId'))
 #end
 
 ## URL
@@ -20,8 +31,6 @@
   #set($url = $doc.getFieldValue('url'))
 #elseif($doc.getFieldValue('resourcename'))
   #set($url = "file:///$doc.getFieldValue('resourcename')")
-#else
-  #set($url = "$doc.getFieldValue('id')")
 #end
 
 ## Sort out Mime-Type
@@ -42,6 +51,10 @@
   #set($filetype = $filename.substring($filename.lastIndexOf(".")).substring(1))
 #end
 
+#if($doc.getFieldValue('messageId'))
+  #set($filetype = "eml")
+#end
+
 ## #if(!$filetype)
 ##   #set($filetype = "file")
 ## #end
@@ -56,14 +69,24 @@
   <img src="#{url_root}/img/filetypes/${filetype}.png" align="center">
 
   ## Title, hyperlinked
-  <a href="${url}" target="_blank">
-    <b>$title</b></a>
+  #if($url)
+    <a href="${url}" target="_blank">
+      <b>$title</b></a>
+  #else
+    <b>$title</b>
+  #end
 
   ## Link for MLT / More Like This / Find Similar
   <span class="mlt">
+    
     #if($params.getBool('mlt', false) == false)
-      <a href="#lensNoQ&q=id:%22$docId%22&mlt=true">
-        More Like This</a>
+      #if($doc.getFieldValue('messageId'))
+        <a href="#lensNoQ&q=messageId:%22$doc.getFieldValue('messageId')%22&mlt=true">
+          More Like This</a>
+      #else
+        <a href="#lensNoQ&q=id:%22$id%22&mlt=true">
+          More Like This</a>
+      #end
     #end
   </span>
 
@@ -71,7 +94,7 @@
 
 ## Row 2?: ID / URL
 <div>
-  Id: #field('id')
+  Id: $esc.html($myId)
 </div>
 
 ## Resource Name
@@ -93,11 +116,26 @@
   </div>
 #end
 
+## From
+#if($doc.getFieldValue('from'))
+  <div>
+    From: #field('from')
+  </div>
+#end
+
 ## Last_Modified Date
 #if($doc.getFieldValue('last_modified'))
   <div>
     last-modified:
     #field('last_modified')
+  </div>
+#end
+
+## sentDate
+#if($doc.getFieldValue('sentDate'))
+  <div>
+    sent-date:
+    #field('sentDate')
   </div>
 #end
 
