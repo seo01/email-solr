@@ -332,7 +332,8 @@
      termOffsets: Store offset information with the term vector. This will increase storage costs.
    -->
 
-   <field name="messageId" type="string" indexed="true" stored="true" required="true" omitNorms="true" />
+    <field name="id" type="string" indexed="true" stored="true" required="true" omitNorms="true" />
+   <field name="messageId" type="string" indexed="true" stored="true" omitNorms="true" />
    <field name="subject" type="string" indexed="true" stored="true" omitNorms="true" />
    <field name="from" type="string" indexed="true" stored="true" omitNorms="true"/>
    <field name="sentDate" type="date" indexed="true" stored="true"/>
@@ -346,6 +347,26 @@
 
    <field name="catchAllField" type="text" indexed="true" stored="true" omitNorms="true" multiValued="true"/>
 
+      <!-- Common metadata fields, named specifically to match up with
+     SolrCell metadata when parsing rich documents such as Word, PDF.
+     Some fields are multiValued only because Tika currently may return
+     multiple values for them. Some metadata is parsed from the documents,
+     but there are some which come from the client context:
+       "content_type": From the HTTP headers of incoming stream
+       "resourcename": From SolrCell request param resource.name
+   -->
+   <field name="title" type="text" indexed="true" stored="true" multiValued="true"/>
+   <field name="comments" type="text" indexed="true" stored="true"/>
+   <field name="author" type="text" indexed="true" stored="true"/>
+   <field name="keywords" type="text" indexed="true" stored="true"/>
+   <field name="category" type="text" indexed="true" stored="true"/>
+   <field name="resourcename" type="text" indexed="true" stored="true"/>
+   <field name="url" type="text" indexed="true" stored="true"/>
+   <field name="content_type" type="string" indexed="true" stored="true" multiValued="true"/>
+   <field name="last_modified" type="date" indexed="true" stored="true"/>
+   <field name="links" type="string" indexed="true" stored="true" multiValued="true"/>
+   <dynamicField name="ignored_*" type="ignored" multiValued="true"/>
+
  </fields>
 
   <copyField source="content" dest="catchAllField"/>
@@ -354,8 +375,11 @@
   <copyField source="subject" dest="catchAllField"/>
   <copyField source="allTo" dest="catchAllField"/>
 
+  <!-- TODO: add copyField elements for the Tika fields -->
+
   <!-- The unique key, Note that some mail servers may not send the message-id or they may send duplicate ones -->
-  <uniqueKey>messageId</uniqueKey>
+  <!--uniqueKey>messageId</uniqueKey-->
+ <uniqueKey>id</uniqueKey>
 
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
  <defaultSearchField>catchAllField</defaultSearchField>
