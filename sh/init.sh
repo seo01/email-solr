@@ -1,0 +1,1 @@
+java -Dsolr.solr.home="../../../email-solr" -jar start.jar
