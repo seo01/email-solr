@@ -785,6 +785,25 @@
     -->
   <requestHandler name="/update" class="solr.UpdateRequestHandler"  />
 
+  <!-- Solr Cell Update Request Handler
+
+       http://wiki.apache.org/solr/ExtractingRequestHandler 
+
+    -->
+  <requestHandler name="/update/extract" 
+                  startup="lazy"
+                  class="solr.extraction.ExtractingRequestHandler" >
+    <lst name="defaults">
+      <str name="lowernames">true</str>
+      <str name="uprefix">ignored_</str>
+
+      <!-- capture link hrefs but ignore div attributes -->
+      <str name="captureAttr">true</str>
+      <str name="fmap.a">links</str>
+      <str name="fmap.div">ignored_</str>
+    </lst>
+  </requestHandler>
+
 
   <!--
    Admin Handlers - This will register all the standard admin RequestHandlers.  Adding
