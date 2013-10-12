@@ -31,6 +31,8 @@
   #set($url = $doc.getFieldValue('url'))
 #elseif($doc.getFieldValue('resourcename'))
   #set($url = "file:///$doc.getFieldValue('resourcename')")
+#else
+  #set($url = false)
 #end
 
 ## Sort out Mime-Type
@@ -143,6 +145,13 @@
 <div class="result-body">
   #field('content')
 </div>
+
+#if($url)
+  <div class="thumbnail">
+    #set($x_url = $esc.url($url))
+    <img src="#{url_root}/img/thumbnails/${esc.url($x_url)}-clipped.png" align="center">
+  </div>
+#end
 
 ## Display Similar Documents / MLT = More Like This
 <div class="mlt">
