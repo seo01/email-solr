@@ -41,10 +41,24 @@ cat $ALL_URLS | gsort -u -R > $UNIQ_URLS
 
 for url in `cat $UNIQ_URLS`
 do
-  #TODO: crawl headers and check there isn't a 40X err
+  
   #TODO: check it is not already indexed
-  domain=`echo $url | egrep -o "//[^/?]+" | egrep -o "[^/?]+"`
-  java -Ddata=web -Dparams=literal.domain=$domain -jar $POST_JAR $url
+  ENCODED=`urlencode $url`
+  NUM_FOUND=`curl --stderr /dev/null "http://localhost:8983/solr/collection1/select?q=id%3A%22{$ENCODED}%22&fl=id&wt=json" | jq .response.numFound`
+
+  if [ "x1" = "x$NUM_FOUND" ]
+  then
+  	echo "Already indexed"
+  else 
+	  curl --stderr /dev/null -I $url | head -n1 | egrep "(2|3)0[0-9]"
+	  if [ "x$?" = "x0" ]
+	  then
+		  domain=`echo $url | egrep -o "//[^/?]+" | egrep -o "[^/?]+"`
+		  gtimeout 20 java -Ddata=web -Dparams=literal.domain=$domain -jar $POST_JAR $url
+	   else
+	     echo "Return code not 20X or 30X"
+	   fi
+  fi
 done
 
 #TODO: crawl thumbnails for thumbnail files that don't already exist
@@ -54,5 +68,16 @@ mkdir -p $THUMBNAIL_ROOT
 for url in `cat $UNIQ_URLS`
 do
   ENCODED=`urlencode $url`
-  $WEBKIT2PNG -D $THUMBNAIL_ROOT -o $ENCODED -C $url
+  DEST_FILE={$THUMBNAIL_ROOT}/{$ENCODED}-clipped.png
+  if [ -a $DEST_FILE ]
+  then
+    echo "File already exists"
+  else
+    curl --stderr /dev/null -I $url | head -n1 | egrep "(2|3)0[0-9]"
+	if $?
+      gtimeout 30 $WEBKIT2PNG -D $THUMBNAIL_ROOT -o $ENCODED -C $url
+    else
+	  echo "Return code not 20X or 30X"
+	fi
+  fi
 done
