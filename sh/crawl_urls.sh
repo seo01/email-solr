@@ -62,6 +62,7 @@ do
 done
 
 #TODO: crawl thumbnails for thumbnail files that don't already exist
+#TODO simlink this dir from the colection dir
 THUMBNAIL_ROOT=$URL_ROOT/img/thumbnails/
 mkdir -p $THUMBNAIL_ROOT
 
@@ -74,7 +75,8 @@ do
     echo "File already exists"
   else
     curl --stderr /dev/null -I $url | head -n1 | egrep "(2|3)0[0-9]"
-	if $?
+	if [ "x$?" = "x0" ]
+	then
       gtimeout 30 $WEBKIT2PNG -D $THUMBNAIL_ROOT -o $ENCODED -C $url
     else
 	  echo "Return code not 20X or 30X"
