@@ -12,17 +12,17 @@
         <input type="submit" id="querySubmit"/>
         <input type="reset"/>
       </span>
-      <div class="query-boost">
-        <span #annTitle("Add the boost function &bf=price to the query")>
-          <input type="checkbox" name="bf" value="price"
-            #if($request.params.get('bf') == 'price')checked="true"#end
-          >
-            Boost by Price
-          </input>
-        </span>
-      #parse("query_spatial.vm")
-      #parse("query_group.vm")
-      </div>
+      ##<div class="query-boost">
+      ##  <span #annTitle("Add the boost function &bf=price to the query")>
+      ##    <input type="checkbox" name="bf" value="price"
+      ##      #if($request.params.get('bf') == 'price')checked="true"#end
+      ##    >
+      ##      Boost by Price
+      ##    </input>
+      ##  </span>
+      ###parse("query_spatial.vm")
+      ###parse("query_group.vm")
+      ##</div>
   </div>
 
     #if($request.params.get('debugQuery'))
