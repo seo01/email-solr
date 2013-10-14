@@ -501,12 +501,14 @@
        <str name="facet.field">from</str>
        <str name="facet.field">domain</str>
        <str name="facet.field">keywords</str>
+       <str name="facet.field">catchAllField</str>
        <str name="facet.query">spider.io</str>
        <str name="facet.query">java</str>
        <str name="facet.query">python</str>
        <str name="facet.query">hadoop</str>
        <str name="facet.query">botnet</str>
        <str name="facet.mincount">1</str>
+       <str name="facet.limit">10</str>
        <!--str name="facet.pivot">from</str-->
        <!--str name="facet.range.other">after</str>
        <str name="facet.range">price</str>
@@ -592,6 +594,7 @@
       <str>myLastComponentName</str>
     </arr>
   -->
+
 
    <!-- The spell check component can return a list of alternative spelling
   suggestions.  -->
