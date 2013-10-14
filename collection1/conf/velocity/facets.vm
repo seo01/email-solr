@@ -6,5 +6,4 @@
 #parse('facet_fields.vm')
 #parse('facet_queries.vm')
 #parse('facet_ranges.vm')
-#parse('facet_pivot.vm')
-#parse('cluster.vm')
+
