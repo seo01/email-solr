@@ -14,6 +14,12 @@ mkdir -p $URL_DIR
 
 ALL_URLS=$URL_DIR/all_urls.txt
 UNIQ_URLS=$URL_DIR/uniq_urls.txt
+MORE_URLS=$URL_DIR/more_urls.txt
+
+THUMBNAIL_ROOT=$URL_DIR/thumbnails/
+mkdir -p $THUMBNAIL_ROOT 
+
+COPY_TO_THUMBS=$URL_ROOT/img/thumbnails/
 
 urlencode() {
     local l=${#1}
@@ -61,10 +67,9 @@ do
   fi
 done
 
-#TODO: crawl thumbnails for thumbnail files that don't already exist
-#TODO simlink this dir from the colection dir
-THUMBNAIL_ROOT=$URL_ROOT/img/thumbnails/
-mkdir -p $THUMBNAIL_ROOT
+curl "http://localhost:8983/solr/collection1/select?q=domain%3A*&fl=id&wt=json&rows=10000" | jq -r ".response.docs | map(.id)" | egrep -o '[^", ]+' | grep "http" > $MORE_URLS
+
+cat $ALL_URLS $MORE_URLS | gsort -u -R > $UNIQ_URLS
 
 for url in `cat $UNIQ_URLS`
 do
@@ -83,3 +88,5 @@ do
 	fi
   fi
 done
+
+cp -r $THUMBNAIL_ROOT $COPY_TO_THUMBS
