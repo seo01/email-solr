@@ -79,18 +79,18 @@
   #end
 
   ## Link for MLT / More Like This / Find Similar
-  <span class="mlt">
+  ##<span class="mlt">
     
-    #if($params.getBool('mlt', false) == false)
-      #if($doc.getFieldValue('messageId'))
-        <a href="#lensNoQ&q=messageId:%22$doc.getFieldValue('messageId')%22&mlt=true">
-          More Like This</a>
-      #else
-        <a href="#lensNoQ&q=id:%22$id%22&mlt=true">
-          More Like This</a>
-      #end
-    #end
-  </span>
+  ##  #if($params.getBool('mlt', false) == false)
+  ##    #if($doc.getFieldValue('id'))
+  ##      <a href="#lensNoQ&q=id:%22$doc.getFieldValue('id')%22&mlt=true">
+  ##        More Like This</a>
+  ##    #else
+  ##      <a href="#lensNoQ&q=id:%22$id%22&mlt=true">
+  ##        More Like This</a>
+  ##    #end
+  ##  #end
+  ##</span>
 
 </div>
 
@@ -106,9 +106,9 @@
   #elseif($url)
     URL: $url
   #end
-  #if($ct)
-    ($ct)
-  #end
+  ##if($ct)
+  ##  ($ct)
+  ##end
 </div>
 
 ## Author
@@ -149,7 +149,7 @@
 #if($url)
   <div class="thumbnail">
     #set($x_url = $esc.url($url))
-    <img src="#{url_root}/img/thumbnails/${esc.url($x_url)}-clipped.png" align="center">
+    <img src="#{url_root}/img/thumbnails/${esc.url($x_url)}-clipped.png" align="center" onerror="this.src = '#{url_root}/img/ico/document-text.png'">
   </div>
 #end
 
