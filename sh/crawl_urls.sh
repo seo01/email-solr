@@ -17,7 +17,7 @@ UNIQ_URLS=$URL_DIR/uniq_urls.txt
 MORE_URLS=$URL_DIR/more_urls.txt
 
 THUMBNAIL_ROOT=$URL_DIR/thumbnails/
-mkdir -p $THUMBNAIL_ROOT 
+mkdir -p $THUMBNAIL_ROOT
 
 COPY_TO_THUMBS=$URL_ROOT/img/thumbnails/
 
@@ -82,11 +82,11 @@ do
     curl --stderr /dev/null -I $url | head -n1 | egrep "(2|3)0[0-9]"
 	if [ "x$?" = "x0" ]
 	then
-      gtimeout 30 $WEBKIT2PNG -D $THUMBNAIL_ROOT -o $ENCODED -C $url
+      gtimeout 30 $WEBKIT2PNG -D $THUMBNAIL_ROOT -o $ENCODED $url
     else
 	  echo "Return code not 20X or 30X"
 	fi
   fi
 done
 
-cp -r $THUMBNAIL_ROOT $COPY_TO_THUMBS
+cp -R $THUMBNAIL_ROOT $COPY_TO_THUMBS
