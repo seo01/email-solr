@@ -11,8 +11,6 @@
 ## Title
 #if($doc.getFieldValue('title'))
   #set($title = $esc.html($doc.getFirstValue('title')))
-#elseif($doc.getFieldValue('subject'))
-  #set($title = $esc.html($doc.getFirstValue('subject')))
 #else
   #set($title = "["+$doc.getFieldValue('id')+"]")
 #end
@@ -22,8 +20,6 @@
   #set($myId = $docId)
 #elseif($doc.getFieldValue('id'))
   #set($myId = $doc.getFieldValue('id'))
-#else
-  #set($myId = $doc.getFieldValue('messageId'))
 #end
 
 ## URL
@@ -51,10 +47,6 @@
 
 #if(!$filetype)
   #set($filetype = $filename.substring($filename.lastIndexOf(".")).substring(1))
-#end
-
-#if($doc.getFieldValue('messageId'))
-  #set($filetype = "eml")
 #end
 
 ## #if(!$filetype)
@@ -94,17 +86,12 @@
 
 </div>
 
-## Row 2?: ID / URL
-<div>
-  Id: $esc.html($myId)
-</div>
-
 ## Resource Name
 <div>
   #if($doc.getFieldValue('resourcename'))
     Resource name: $filename 
   #elseif($url)
-    URL: $url
+    URL: <a href="$url">$url</a>
   #end
   ##if($ct)
   ##  ($ct)
@@ -115,13 +102,6 @@
 #if($doc.getFieldValue('author'))
   <div>
     Author: #field('author')
-  </div>
-#end
-
-## From
-#if($doc.getFieldValue('from'))
-  <div>
-    From: #field('from')
   </div>
 #end
 
@@ -149,52 +129,10 @@
 #if($url)
   <div class="thumbnail">
     #set($x_url = $esc.url($url))
-    <img src="#{url_root}/img/thumbnails/${esc.url($x_url)}-clipped.png" align="center" onerror="this.src = '#{url_root}/img/ico/document-text.png'">
+    <a href="#{url_root}/img/thumbnails/${esc.url($x_url)}-full.png">
+      <img src="#{url_root}/img/thumbnails/${esc.url($x_url)}-clipped.png" align="center" onerror="this.src = '#{url_root}/img/ico/document-text.png'">
+    </a>
   </div>
 #end
-
-## Display Similar Documents / MLT = More Like This
-<div class="mlt">
-  #set($mlt = $mltResults.get($docId))
-  #set($mltOn = $params.getBool('mlt'))
-  #if($mltOn == true)
-    <div class="field-name">
-      Similar Items
-    </div>
-  #end
-  ## If has MLT enabled An Entries to show
-  #if ($mltOn && $mlt && $mlt.size() > 0)
-    <ul>
-      #foreach($mltHit in $mlt)
-        #set($mltId = $mltHit.getFieldValue('id'))
-        <li>
-          <div>
-            <a href="#url_for_home?q=id:$mltId">
-              $mltId</a>
-          </div>
-          <div>
-            <span class="field-name">
-              Title:
-            </span>
-            $mltHit.getFieldValue('title')
-          </div>
-          <div>
-            <span class="field-name">
-              Author:
-            </span>
-            $mltHit.getFieldValue('author')
-            <span class="field-name">
-              Description:
-            </span>
-            $mltHit.getFieldValue('description')
-          </div>
-        </li>
-      #end    ## end for each mltHit in $mlt
-    </ul>
-  ## Else MLT Enabled but no mlt results for this query
-  #elseif($mltOn && $mlt.size() == 0)
-    <div>No Similar Items Found</div>
-  #end
-</div>  ## div class=mlt
 
 #parse('debug.vm')

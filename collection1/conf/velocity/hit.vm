@@ -8,16 +8,9 @@
 
 <div class="result-document">
 
-  ##TODO: Recognise emails from RTFs
-
   ## Has a "name" field ?
-  #if($doc.getFieldValue('name'))
-    #parse("product_doc.vm")
-
-  ## Has a "compName_s" field ?
-  #elseif($doc.getFieldValue('compName_s'))
-    #parse("join_doc.vm")
-
+  #if($doc.getFieldValue('messageId'))
+    #parse("email_doc.vm")
   ## Fallback to richtext_doc
   #else
     #parse("richtext_doc.vm")

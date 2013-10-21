@@ -1,0 +1,109 @@
+#**
+ *  Render a complex document in the results list
+ *#
+
+## Load Mime-Type List and Mapping
+#parse('mime_type_lists.vm')
+## Sets:
+## * supportedMimeTypes, AKA supportedtypes
+## * mimeExtensionsMap, AKA extMap
+
+## Title
+#if($doc.getFieldValue('subject'))
+  #set($title = $esc.html($doc.getFirstValue('subject')))
+#else
+  #set($title = "["+$doc.getFieldValue('id')+"]")
+#end
+
+## Check The ID
+#if($doc.getFieldValue('docId'))
+  #set($myId = $docId)
+#elseif($doc.getFieldValue('id'))
+  #set($myId = $doc.getFieldValue('id'))
+#else
+  #set($myId = $doc.getFieldValue('messageId'))
+#end
+
+#set($filetype = "eml")
+
+
+## Row 1: Icon and Title and mlt link
+<div class="result-title">
+  ## Icon
+  ## Small file type icons from http://www.splitbrain.org/projects/file_icons (public domain)
+  <img src="#{url_root}/img/filetypes/${filetype}.png" align="center">
+
+  ## Title, hyperlinked
+  #if($url)
+    <a href="${url}" target="_blank">
+      <b>$title</b></a>
+  #else
+    <b>
+      #set($x_title = $esc.url($title))
+      #set($address = $doc.getFieldValue('from').replaceAll(".*<","").replaceAll(">.*",""))
+      #set($x_address = $esc.url($address))
+      <a href="https://mail.google.com/mail/u/0/?shva=1#search/from%3A${x_address}+subject%3A${x_title}">
+        $title
+      </a>
+    </b>
+  #end
+
+</div>
+
+## Row 2?: ID / URL
+<div>
+  Id: $esc.html($myId)
+</div>
+
+## Resource Name
+#if($doc.getFieldValue('resourcename'))
+<div>
+    Resource name: $filename 
+ </div>
+ #end
+ 
+
+## Author
+#if($doc.getFieldValue('author'))
+  <div>
+    Author: #field('author')
+  </div>
+#end
+
+## From
+#if($doc.getFieldValue('from'))
+  <div>
+    From: #field('from')
+  </div>
+#end
+
+## Last_Modified Date
+#if($doc.getFieldValue('last_modified'))
+  <div>
+    last-modified:
+    #field('last_modified')
+  </div>
+#end
+
+## sentDate
+#if($doc.getFieldValue('sentDate'))
+  <div>
+    sent-date:
+    #field('sentDate')
+  </div>
+#end
+
+## Main content of doc
+<div class="result-body" id="$esc.url($myId)-content">
+  #field('content')
+</div>
+<script>
+  function replaceURLWithHTMLLinks(text) {
+    var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    return text.replace(exp,"<a href='$1'>$1</a>"); 
+  }
+  var content = document.getElementById("$esc.url($myId)-content").innerHTML;
+  content = replaceURLWithHTMLLinks(content);
+  document.getElementById("$esc.url($myId)-content").innerHTML = content;
+</script>
+#parse('debug.vm')
