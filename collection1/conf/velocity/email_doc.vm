@@ -95,7 +95,11 @@
 
 ## Main content of doc
 <div class="result-body" id="$esc.url($myId)-content">
-  #field('content')
+  #foreach($content in $doc.getFieldValue('content'))
+    <div>
+    $esc.html($content).replaceAll("\n","<br/>")
+    </div>
+  #end
 </div>
 <script>
   function replaceURLWithHTMLLinks(text) {
