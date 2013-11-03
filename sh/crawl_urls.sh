@@ -80,12 +80,12 @@ do
     echo "File already exists"
   else
     curl --stderr /dev/null -I $url | head -n1 | egrep "(2|3)0[0-9]"
-	if [ "x$?" = "x0" ]
-	then
+	  if [ "x$?" = "x0" ]
+	  then
       gtimeout 30 $WEBKIT2PNG -D $THUMBNAIL_ROOT -o $ENCODED $url
     else
-	  echo "Return code not 20X or 30X"
-	fi
+	    echo "Return code not 20X or 30X"
+	  fi
   fi
 done
 
