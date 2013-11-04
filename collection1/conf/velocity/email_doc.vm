@@ -97,7 +97,7 @@
 <div class="result-body" id="$esc.url($myId)-content">
   #foreach($content in $doc.getFieldValue('content'))
     <div>
-    $esc.html($content).replaceAll("\n","<br/>")
+    $esc.html($content).trim().replaceAll("\n","<br/>")
     </div>
   #end
 </div>
