@@ -29,6 +29,7 @@
    "image/gif": "gif",
    "application/winhlp": "hlp",
    "text/html": "html",
+   "application/xhtml+xml": "html",
    "application/java-archive": "jar",
    "text/x-java-source": "java",
    "image/jpeg": "jpeg",
